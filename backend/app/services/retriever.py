@@ -48,6 +48,27 @@ class Retriever:
         results.sort(key=lambda x: x.score, reverse=True)
         return results[:self.top_k]
 
+    def retrieve_by_image(
+        self,
+        query_embedding: np.ndarray,
+    ) -> List[SearchResult]:
+        """Retrieve products by image embedding similarity"""
+        image_products, image_scores = self.vector_store.search_by_image(
+            query_embedding, self.top_k * 3
+        )
+
+        results = []
+        for product, score in zip(image_products, image_scores):
+            if score >= self.min_similarity:
+                results.append(SearchResult(
+                    product=product,
+                    score=score,
+                    method="image"
+                ))
+
+        results.sort(key=lambda x: x.score, reverse=True)
+        return results[:self.top_k]
+
     def get_diversified_results(
         self,
         query_embedding: np.ndarray,

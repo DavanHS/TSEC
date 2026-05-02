@@ -38,10 +38,12 @@ async def search_products(
             query_embedding = embedding_service.get_image_embedding_from_base64(
                 request.image_data
             )
+            results = retriever.retrieve_by_image(query_embedding)
+            method_label = "image"
         else:
             query_embedding = embedding_service.get_text_embedding(request.query or "")
-
-        results = retriever.retrieve(query_embedding, hybrid=True)
+            results = retriever.retrieve(query_embedding, hybrid=True)
+            method_label = "text"
 
         search_results = [
             SearchResult(
