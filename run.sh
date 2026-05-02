@@ -16,13 +16,19 @@ if [ -f "$PROJECT_DIR/.env" ]; then
     export $(grep -v '^#' "$PROJECT_DIR/.env" | xargs)
 fi
 
+# Ensure HF_TOKEN is set (needed for CLIP model)
+if [ -n "$HF_TOKEN" ]; then
+    export HF_TOKEN="$HF_TOKEN"
+fi
+
 # Start backend
 echo "📦 Starting Backend..."
 cd "$PROJECT_DIR/backend"
 source venv/bin/activate
 export PYTHONPATH="$PROJECT_DIR/backend"
 export GEMINI_API_KEY="$GEMINI_API_KEY"
-nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 > /tmp/tsec_backend.log 2>&1 &
+export PYTHONPATH="$PROJECT_DIR/backend"
+nohup env PYTHONPATH="$PROJECT_DIR/backend" HF_TOKEN="$HF_TOKEN" uvicorn app.main:app --host 0.0.0.0 --port 8000 > /tmp/tsec_backend.log 2>&1 &
 
 # Wait for backend to be ready (with retry loop)
 echo "Waiting for backend..."
