@@ -11,10 +11,12 @@ env/
 dist/
 build/
 
-# Node modules (huge, don't track)
+# Node modules
 node_modules/
 frontend/node_modules/
-backend/node_modules/
+
+# Models (large local downloads)
+backend/models/
 
 # IDE
 .vscode/
