@@ -11,6 +11,11 @@ env/
 dist/
 build/
 
+# Node modules (huge, don't track)
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
 # IDE
 .vscode/
 .idea/
