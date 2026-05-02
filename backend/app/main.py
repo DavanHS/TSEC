@@ -46,6 +46,7 @@ async def load_products_on_startup():
     global startup_services
     
     products_file = os.path.join(os.path.dirname(__file__), "..", "..", "data", "products.json")
+    images_dir = os.path.join(os.path.dirname(__file__), "..", "..", "data", "images")
     if not os.path.exists(products_file):
         logger.warning(f"Products file not found: {products_file}")
         return
@@ -74,6 +75,21 @@ async def load_products_on_startup():
         embeddings = embedding_service.get_text_embeddings_batch(product_texts)
         vector_store.add_products(products, embeddings)
         logger.info(f"Indexed {len(products)} products with sentence-transformers embeddings")
+        
+        # Generate image embeddings for all products (Phase 2C)
+        if os.path.exists(images_dir):
+            image_paths = []
+            valid_products = []
+            for p in products:
+                img_path = os.path.join(images_dir, f"{p.id}.webp")
+                if os.path.exists(img_path):
+                    image_paths.append(img_path)
+                    valid_products.append(p)
+            
+            if image_paths and len(valid_products) > 0:
+                image_embeddings = embedding_service.get_image_embeddings_batch(image_paths)
+                vector_store.add_image_embeddings(valid_products, image_embeddings)
+                logger.info(f"Generated {len(valid_products)} image embeddings (CLIP)")
         
         # Store for sharing
         startup_services = {
