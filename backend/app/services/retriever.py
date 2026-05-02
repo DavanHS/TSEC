@@ -14,7 +14,7 @@ class Retriever:
         vector_store: VectorStore,
         knowledge_graph: KnowledgeGraph,
         top_k: int = 10,
-        min_similarity: float = 0.35
+        min_similarity: float = 0.10  # Lowered for image search with fallback embeddings
     ):
         self.vector_store = vector_store
         self.knowledge_graph = knowledge_graph

@@ -63,7 +63,7 @@ async def load_products_on_startup():
         embedding_service = create_embedding_service(settings.GEMINI_API_KEY, settings.EMBEDDING_MODEL)
         vector_store = create_vector_store(settings.EMBEDDING_DIM, settings.INDEX_PATH)
         knowledge_graph = create_knowledge_graph()
-        retriever = create_retriever(vector_store, knowledge_graph, settings.TOP_K, 0.35)
+        retriever = create_retriever(vector_store, knowledge_graph, settings.TOP_K, 0.10)
         
         # Generate embeddings from product text using sentence-transformers
         import numpy as np
